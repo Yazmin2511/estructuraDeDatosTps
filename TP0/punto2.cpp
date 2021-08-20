@@ -3,7 +3,7 @@
 
 using namespace std;
 
-main()
+int main()
 {
     int num1,num2, total=0;
     bool bandera=false;

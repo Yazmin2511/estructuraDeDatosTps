@@ -10,7 +10,6 @@ int cambiarSigno(int num2,int&total)
 return total;
 }
 
-
 int main()
 {
     int num1,num2, total=0,auxiliar;

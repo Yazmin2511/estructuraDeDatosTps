@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const int MAX=30;
+const int MAX=5;
 typedef int t_vector[MAX];
 
 // DECLARACION DE METODOS
@@ -12,6 +12,8 @@ void menu(int&opcion);
 void insertarElementos(t_vector&vector1);
 void mostrarElementos(t_vector vector1);
 int impar1 (int num1 , t_vector vector1);
+bool multiplo(int numero);
+void comprobacion(t_vector vector1);
 
 int main()
 {
@@ -29,7 +31,7 @@ int main()
                 break;
             case 2:
                 break;
-            case 3:
+            case 3: comprobacion(vector1);
                 break;
             case 4:
                     cout<<"Saliendo ..."<<endl;
@@ -57,9 +59,10 @@ void insertarElementos(t_vector&vector1)
     bool primero=true;
 
     srand((unsigned)time(0));
-    random= 1+rand();
+
     do
-    {
+    {   random= 1+rand()%(10501-1);
+
         if(i==0)
         {
                 vector1[i]=random;
@@ -67,7 +70,7 @@ void insertarElementos(t_vector&vector1)
         }
          else
         {
-            if(vector1[i-1]>random && random!=vector1[i-1])
+            if(vector1[i-1]>random)
             {
                 vector1[i]=random;
                 i++;
@@ -102,4 +105,50 @@ int impar1 (int num1 , t_vector vector1)
         }
 
 }
+
+void comprobacion(t_vector vector1)
+{int contador=0;
+    for(int i=0;i<MAX;i++)
+    {
+       if( multiplo(vector1[i])==true)
+       {
+            cout<<"Multiplo de 11: "<<vector1[i]<<endl;
+            contador++;
+       }
+    }
+
+    if(contador==0)
+        cout<<"No hay multiplos de 11"<<endl;
+}
+
+bool multiplo(int numero)
+{
+    bool multiplo=false;
+    int impar=0 , par=0 , contador=1,resto;
+
+    while(numero>0)
+    {
+        resto=numero%10;
+        numero=numero/10;
+        if(contador%2==0)
+        {
+            par+=resto;
+        }
+        else
+        {
+            impar+=resto;
+
+        }
+
+        contador++;
+    }
+
+    if(par-impar==0 || (par-impar)%11==0 )
+    multiplo=true;
+
+    return multiplo;
+
+}
+
+
 

@@ -12,10 +12,12 @@ typedef struct tnodo {
 
 typedef struct tlista{
                         pnodo inicio;
+                        int contador;
                      };
 void iniciar_lista( tlista&lista)
 {
   lista.inicio=NULL;
+  lista.contador=0;
 }
 
 void crear_nodo(pnodo&nuevo)
@@ -33,8 +35,9 @@ void crear_nodo(pnodo&nuevo)
 
 void agregar_inicio(tlista&lista, pnodo&nuevo)
 {
-    nuevo->sig=lista.inicio;
-    lista.inicio=nuevo;
+        nuevo->sig=lista.inicio;
+        lista.inicio=nuevo;
+        lista.contador++;
 }
 
 pnodo quitar_final(tlista&lista)
@@ -54,6 +57,8 @@ pnodo quitar_final(tlista&lista)
             aux=i->sig;
             i->sig=NULL;
         }
+
+        lista.contador--;
     }
     else
         aux=NULL;
@@ -63,16 +68,23 @@ pnodo quitar_final(tlista&lista)
 void mostrar_lista(tlista lista)
 {
     pnodo i=lista.inicio;
-        while(i!=NULL)
+
+        if(lista.contador==0)
+            cout<<"La lista esta vacia D:"<<endl;
+        else
         {
-            cout<<"Valor: "<< i->dato<<endl;
-            i=i->sig;
+            while(i!=NULL)
+            {
+                cout<<"Valor: "<< i->dato<<endl;
+                i=i->sig;
+            }
+            cout<<"Elementos ingresados: "<< lista.contador<<endl;
         }
 }
 
 void menu (int&opcion)
 {
-
+    cout<<"̣̣̣̣̣___________________________________"<<endl;
     cout<<"*********Menu Principal***********"<<endl;
     cout<<"1. Iniciar lista"<<endl;
     cout<<"2. Crear y agregar nodo"<<endl;
@@ -99,8 +111,15 @@ main()
         {
             case 1: iniciar_lista(lista);
                 break;
-            case 2: crear_nodo(nuevo);
-                    agregar_inicio(lista,nuevo);
+            case 2: if(lista.contador!=20)
+                    {
+                        crear_nodo(nuevo);
+                        agregar_inicio(lista,nuevo);
+                    }
+                    else
+                    {
+                        cout<<"No se pueden ingresar mas de 20 elementos"<<endl;
+                    }
                 break;
             case 3: mostrar_lista(lista);
                 break;

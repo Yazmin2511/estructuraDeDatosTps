@@ -1,87 +1,90 @@
-
 #include<iostream>
 #include<stdlib.h>
+#include <cstring>
 
 using namespace std;
 
 typedef struct tnodo *pnodo;
 typedef struct tnodo {
-                        float dato;
+                        char dato;
                         pnodo sig;
                      };
-
 typedef struct tlista{
                         pnodo inicio;
-                        int contador;
                      };
-void iniciar_lista( tlista&lista)
+void iniciar_lista( tlista&lista )
 {
-  lista.inicio=NULL;
-  lista.contador=0;
+    lista.inicio=NULL;
 }
 
 void crear_nodo(pnodo&nuevo)
 {
-    nuevo= new tnodo;
+    nuevo = new tnodo;
     if(nuevo!=NULL)
     {
-        cout<<"Ingreso valor: "<<endl;
+        cout<<"Ingrese nuevo valor: "<<endl;
         cin>>nuevo->dato;
         nuevo->sig=NULL;
     }
     else
-        cout<<"MEMORIA INSUFICIENTE"<<endl;
+        cout<<"MEMORIA INSUFICICENTE"<<endl;
+}
+
+bool buscar_nodo(tlista lista, char buscado)
+{
+    bool encontrado=false;
+    pnodo i;
+
+    if(lista.inicio!=NULL)
+    {
+        for(i=lista.inicio; i!=NULL && !encontrado; i= i->sig)
+        {
+            if(i->dato==buscado)
+                encontrado=true;
+        }
+    }
+    return encontrado;
 }
 
 void agregar_inicio(tlista&lista, pnodo&nuevo)
 {
         nuevo->sig=lista.inicio;
         lista.inicio=nuevo;
-        lista.contador++;
 }
 
-pnodo quitar_final(tlista&lista)
+void agregar_orden(tlista&lista, pnodo&nuevo)
 {
-    pnodo aux , i ;
-
-    if(lista.inicio!=NULL)
+    if(lista.inicio==NULL)
     {
-        if(lista.inicio->sig==NULL)
-        {
-            aux=lista.inicio;
-            lista.inicio=NULL;
-        }
-        else
-        {
-            for(i=lista.inicio; (i->sig)->sig!=NULL; i=i->sig);
-            aux=i->sig;
-            i->sig=NULL;
-        }
-
-        lista.contador--;
+        lista.inicio=nuevo;
     }
     else
-        aux=NULL;
+    {
+        bool existe=buscar_nodo(lista, nuevo->dato);
+        if(existe==false)
+        {
+            if(lista.inicio->sig==NULL)
+            {
+                if(lista.inicio->dato<nuevo->dato)
+                    agregar_inicio(lista,nuevo);
+            }
 
-    return aux;
+        }
+        else
+            delete(nuevo);
 
+    }
 }
 
 void mostrar_lista(tlista lista)
 {
     pnodo i=lista.inicio;
 
-        if(lista.contador==0)
-            cout<<"La lista esta vacia D:"<<endl;
-        else
-        {
             while(i!=NULL)
             {
                 cout<<"Valor: "<< i->dato<<endl;
                 i=i->sig;
             }
-            cout<<"Elementos ingresados: "<< lista.contador<<endl;
-        }
 }
 
 void menu (int&opcion)
@@ -101,6 +104,7 @@ void menu (int&opcion)
 
 }
 
+
 int main()
 {
     int opcion=0;
@@ -113,24 +117,16 @@ int main()
         {
             case 1: iniciar_lista(lista);
                 break;
-            case 2: if(lista.contador!=20)
-                    {
-                        crear_nodo(nuevo);
-                        agregar_inicio(lista,nuevo);
-                    }
-                    else
-                    {
-                        cout<<"No se pueden ingresar mas de 20 elementos"<<endl;
-                    }
+            case 2: crear_nodo(nuevo);
+                    agregar_orden(lista, nuevo);
                 break;
             case 3: mostrar_lista(lista);
                 break;
-            case 4: quitar_final(lista);
+            case 4: //quitar_final(lista);
                 break;
             case 5: cout<<"Salilendo..."<<endl;
                 break;
         }
     }while(opcion!=5);
-
 
 }

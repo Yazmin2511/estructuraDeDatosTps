@@ -73,6 +73,8 @@ pnodo quitar_final(tlista&lista)
     else
         aux=NULL;
 
+    return aux;
+
 }
 
 void mostrar(tlista lista)
@@ -101,7 +103,7 @@ void menu (int&opcion)
 
 }
 
-main()
+int main()
 {int opcion=0;
     tlista lista;
     pnodo nuevo;

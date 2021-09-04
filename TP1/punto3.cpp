@@ -53,7 +53,7 @@ void agregar_inicio(tlista&lista, pnodo&nuevo)
 }
 
 void agregar_orden(tlista&lista, pnodo&nuevo)
-{
+{pnodo i;
     if(lista.inicio==NULL)
     {
         lista.inicio=nuevo;
@@ -63,17 +63,88 @@ void agregar_orden(tlista&lista, pnodo&nuevo)
         bool existe=buscar_nodo(lista, nuevo->dato);
         if(existe==false)
         {
-            if(lista.inicio->sig==NULL)
+            if(lista.inicio==NULL)
             {
-                if(lista.inicio->dato<nuevo->dato)
-                    agregar_inicio(lista,nuevo);
-            }
+                lista.inicio = nuevo;
+            }        
+            else
+            {   if(nuevo->dato < lista.inicio->dato)
+                {
+                    nuevo->sig =lista.inicio;
+                    lista.inicio=nuevo;
+                }
+                else
+                {
+                    for(i=lista.inicio; i->sig!=NULL && nuevo->dato > (i->sig)->dato ; i=i->sig );
+                    nuevo->sig=i->sig;
+                    i->sig = nuevo;
+                }       
+            }
 
         }
         else
             delete(nuevo);
 
     }
+}
+
+tlista quitar_inicio(tlista&lista)
+{pnodo extraido;
+    if(lista.inicio!= NULL)
+    {   
+        if(lista.inicio->sig=NULL)
+            lista.inicio=NULL;
+        else
+        {
+            lista.inicio=lista.inicio->sig;
+            extraido->sig=NULL;
+        }
+    }
+
+    return lista;
+
+}
+tlista quitar_final(tlista&lista)
+{    pnodo i;
+    if(lista.inicio!=NULL)
+    {
+        if(lista.inicio->sig==NULL) 
+        {
+            lista.inicio=NULL;
+        }
+        else
+        {
+            for(i=lista.inicio; (i->sig)->sig!=NULL; i=i->sig);
+            i->sig=NULL;
+        }
+
+    }
+
+
+    return lista;
+}
+
+void quitar_opcion(tlista&lista)
+{int opcion;
+    system("clear");
+    cout<<"__________________Quitar _________________"<<endl;
+    cout<<"1) Quitar inicio "<<endl;
+    cout<<"2) Quitar final "<<endl;
+
+    cout<<"Elija opcion: "<<endl;
+    cin>>opcion;
+
+    switch (opcion)
+    {
+    case 1: lista = quitar_inicio(lista);
+        break;
+    case 2: lista = quitar_final(lista);
+        break;
+    
+    default: cout<<" Opcion incorrecta "<<endl;  
+        break;
+    }
+
 }
 
 void mostrar_lista(tlista lista)
@@ -122,9 +193,9 @@ int main()
                 break;
             case 3: mostrar_lista(lista);
                 break;
-            case 4: //quitar_final(lista);
+            case 4: quitar_opcion(lista);
                 break;
-            case 5: cout<<"Salilendo..."<<endl;
+            case 5: cout<<"Saliendo..."<<endl;
                 break;
         }
     }while(opcion!=5);

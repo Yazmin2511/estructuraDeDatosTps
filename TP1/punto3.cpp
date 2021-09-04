@@ -46,12 +46,6 @@ bool buscar_nodo(tlista lista, char buscado)
     return encontrado;
 }
 
-void agregar_inicio(tlista&lista, pnodo&nuevo)
-{
-        nuevo->sig=lista.inicio;
-        lista.inicio=nuevo;
-}
-
 void agregar_orden(tlista&lista, pnodo&nuevo)
 {pnodo i;
     if(lista.inicio==NULL)
@@ -68,14 +62,14 @@ void agregar_orden(tlista&lista, pnodo&nuevo)
                 lista.inicio = nuevo;
             }        
             else
-            {   if(nuevo->dato < lista.inicio->dato)
+            {   if(nuevo->dato > lista.inicio->dato)
                 {
                     nuevo->sig =lista.inicio;
                     lista.inicio=nuevo;
                 }
                 else
                 {
-                    for(i=lista.inicio; i->sig!=NULL && nuevo->dato > (i->sig)->dato ; i=i->sig );
+                    for(i=lista.inicio; i->sig!=NULL && nuevo->dato < (i->sig)->dato ; i=i->sig );
                     nuevo->sig=i->sig;
                     i->sig = nuevo;
                 }       
@@ -89,16 +83,10 @@ void agregar_orden(tlista&lista, pnodo&nuevo)
 }
 
 tlista quitar_inicio(tlista&lista)
-{pnodo extraido;
+{pnodo borrado;
     if(lista.inicio!= NULL)
     {   
-        if(lista.inicio->sig=NULL)
-            lista.inicio=NULL;
-        else
-        {
-            lista.inicio=lista.inicio->sig;
-            extraido->sig=NULL;
-        }
+        lista.inicio=lista.inicio->sig;
     }
 
     return lista;
@@ -199,5 +187,7 @@ int main()
                 break;
         }
     }while(opcion!=5);
+
+    return 0;
 
 }

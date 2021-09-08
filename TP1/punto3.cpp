@@ -135,6 +135,36 @@ void quitar_opcion(tlista&lista)
 
 }
 
+void pertenece(tlista lista, char dato)
+{
+    if(lista.inicio->dato==dato)
+    {
+        cout<<dato<<" ENCONTRADO "<<endl;
+    }
+    else
+    {
+        if(lista.inicio->sig != NULL)
+        {
+            pertenece(lista,dato);
+        }   
+        else
+            cout<<"No se encuentra en la lista"<<endl;
+    }
+
+}
+
+void buscar_elemento(tlista&lista)
+{char dato;
+    system("clear");
+    cout<<"__________________Buscar _________________"<<endl;
+
+    cout<<"Ingrese elemento a buscar: "<<endl;
+    cin>>dato;
+
+    pertenece(lista,dato);
+
+}
+
 void mostrar_lista(tlista lista)
 {
     pnodo i=lista.inicio;
@@ -154,7 +184,8 @@ void menu (int&opcion)
     cout<<"2. Crear y agregar nodo"<<endl;
     cout<<"3. Mostrar"<<endl;
     cout<<"4. Quitar"<<endl;
-    cout<<"5. Salir"<<endl;
+    cout<<"5. Buscar"<<endl;
+    cout<<"6. Salir"<<endl;
 
     cout<<"Elija opcion "<<endl;
     cin>>opcion;
@@ -183,10 +214,12 @@ int main()
                 break;
             case 4: quitar_opcion(lista);
                 break;
-            case 5: cout<<"Saliendo..."<<endl;
+            case 5: buscar_elemento(lista);
+                break;
+            case 6: cout<<"Saliendo..."<<endl;
                 break;
         }
-    }while(opcion!=5);
+    }while(opcion!=6);
 
     return 0;
 

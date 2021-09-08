@@ -102,11 +102,38 @@ void agregar_valor(tlista&lista , pnodo nuevo)
 int voltearNumero(int num)
 {
     int inv=0;
-
+while(num!=0)
+{
     inv = inv*10 + (num % 10);
     num= num/10;
-
+}
     return inv;
+}
+
+void quitar(tlista&lista, int valor)
+{pnodo extraido,i;
+    if(lista.inicio!=NULL)
+    {
+        if(lista.inicio->dato == valor)
+        {
+            if(lista.inicio->sig==NULL)
+                lista.inicio=NULL;
+            else
+            {   extraido=lista.inicio;
+                lista.inicio=lista.inicio->sig;
+                extraido->sig=NULL;
+            }
+        }
+        else
+        {
+            for(i=lista.inicio; i->sig!=NULL && valor!=(i->sig)->dato; i=i->sig);
+                if(i->sig!=NULL)
+                {   extraido=i->sig;
+                    i->sig= extraido->sig;
+                    extraido->sig=NULL;
+                }
+        } 
+    }
 }
 
 void buscar(tlista&lista)
@@ -121,12 +148,32 @@ void buscar(tlista&lista)
     
     for(i=lista.inicio;i->sig!=NULL&& i->dato!=buscado && i->dato!=inv;i++);
     
-    if(i->dato==buscado || i->dato == inv)
-        cout<<"Valor encontrado"<<endl;
+    if(i->dato==buscado)
+    {
+         cout<<"Valor encontrado"<<endl;
+         quitar(lista,buscado);
+    }      
     else
-        cout<<"Valor no encontrado "<<endl;
+    {
+        if( i->dato == inv)
+        {
+            cout<<"Inverso encontrado "<<endl;
+            quitar(lista,inv);
+        }     
+        else
+            cout<<"No encontrado"<<endl;
 
+    }
+       
 
+}
+
+int contar_nodos(tlista lista, pnodo i)
+{
+    if(i ==NULL)
+        return 0;
+    else
+        return 1 + contar_nodos(lista , i->sig) ;
 }
 
 void mostrar_lista(tlista lista)
@@ -147,8 +194,8 @@ void menu (int&opcion)
     cout<<"1. Iniciar lista"<<endl;
     cout<<"2. Crear y agregar nodo"<<endl;
     cout<<"3. Mostrar"<<endl;
-    cout<<"4. Quitar"<<endl;
-    cout<<"5. Buscar"<<endl;
+    cout<<"4. Buscar y quitar"<<endl;
+    cout<<"5. Cantidad de nodos en la lista"<<endl;
     cout<<"6. Salir"<<endl;
 
     cout<<"Elija opcion "<<endl;
@@ -163,7 +210,7 @@ int main()
 {
     int opcion=0;
     tlista lista;
-    pnodo nuevo;
+    pnodo nuevo,i;
 
     do{
         menu(opcion);
@@ -178,7 +225,8 @@ int main()
                 break;
             case 4: buscar(lista);
                 break;
-            case 5:
+            case 5: i=lista.inicio;
+                    cout<<"Cantidad de nodos: "<<contar_nodos(lista,i)<<endl;
                 break;
             case 6: cout<<"Saliendo..."<<endl;
                 break;

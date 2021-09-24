@@ -6,6 +6,8 @@ using namespace std;
 //Define la cantidad maxima de jugadores registrados permitidos
 const int MAX = 30;
 
+//Define la cantidad de numeros por carton
+const int MAX_NUM=15;
 
 // Definicion de estructuras para Jugador
 typedef char tcad[30];
@@ -15,7 +17,6 @@ typedef struct t_jugador{
                 long dni;
                 int bingos_ganados;
                 int puntaje;
-
 };
 typedef struct tnodo *pnodo;
 typedef struct tnodo{
@@ -32,8 +33,8 @@ typedef struct tnodo2 *pnodo2;
 
 typedef struct tnodo2{
                 int numero;
-                pnodo sig;
-                pnodo ant;
+                pnodo2 sig;
+                pnodo2 ant;
 };
 typedef struct tlista_carton{
                 pnodo2 inicio;
@@ -151,6 +152,18 @@ void iniciar_lista_cartones(tlista_carton&lista_carton)
     lista_carton.cantidad=0;
 }
 
+
+bool comprobacion(tlista_carton lista, int num){
+    pnodo2 j;
+ 
+    bool existe=false;
+    for(j=lista.inicio; existe==true || j->sig==NULL ; j=j->sig ){
+        if(j->numero == num)
+            existe=true;
+    }
+    return existe;
+}
+
 void agregar_numeros_carton(tlista_carton&lista_carton){
 pnodo2 i=lista_carton.inicio;
 int num;
@@ -159,6 +172,10 @@ int num;
     do
     {
         num=1+rand()%(91-1);
+        if(comprobacion(lista_carton,num)==false)
+        {
+            
+        }
 
     } while (i->sig!=NULL);
     
@@ -166,15 +183,6 @@ int num;
     
 }
 
-bool comprobacion(tlista_carton lista, int num){
-    pnodo2 j;
-    bool existe=false;
-    for(j=lista.inicio;j!=NULL || existe=true; j ){
-        if(j->numero == num)
-            existe=true;
-    }
-
-}
 //Juego
 
 
@@ -211,7 +219,12 @@ int main()
         case 1: system("clear");
                 menu_jugadores(lista_jugador);
             break;
-        case 2: 
+        case 2: if(condicion_jugadores==true)
+                {
+
+                }
+                else
+                    cout<<"Jugadores insuficientes"<<endl;
             break;
         case 3: if(condicion_jugadores&&condicion_cartones)
                 {

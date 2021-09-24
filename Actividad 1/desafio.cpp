@@ -7,7 +7,7 @@ using namespace std;
 const int MAX = 30;
 
 //Define la cantidad de numeros por carton
-const int MAX_NUM = 15;
+const int MAX_NUM = 5;
 
 // ****************************************
 // Definicion de estructuras para Carton
@@ -185,18 +185,25 @@ bool comprobacion(tlista_numeros lista, int num)
     return existe;
 }
 
-void crear_nodo(pnodo2 &nuevo)
+void crear_nodo(pnodo2 &nuevo,int valor)
 {
-    int num;
     nuevo = new tnodo2;
-    nuevo->ant = NULL;
-    nuevo->sig = NULL;
+    if(nuevo!= NULL)
+    {   
+        nuevo->numero=valor;
+        nuevo->ant = NULL;
+        nuevo->sig = NULL;
+    }
+    else
+        cout<<"MEMORIA INSUFICIENTE"<<endl;
+    
 }
 
-int generar_numero(tlista_numeros lista, int &num)
+int generar_numero(tlista_numeros lista)
 {
-    srand(time(NULL));
-    //srand((unsigned)time(0));
+   // srand(time(NULL));
+    int num;
+    srand((unsigned)time(0));
     do
     {
         num = 1 + rand() % (91 - 1);
@@ -208,30 +215,33 @@ int generar_numero(tlista_numeros lista, int &num)
 void agregar_numero(tlista_numeros &lista_numeros, pnodo2 nuevo)
 {
     pnodo2 j;
+
     int num, cont = 0;
+
+    crear_nodo(nuevo,generar_numero(lista_numeros));
 
     if (lista_numeros.inicio == NULL)
         lista_numeros.inicio = nuevo;
     else
     {
-        for (j = lista_numeros.inicio; j->sig == NULL; j = j->sig)
-            ;
+        for (j = lista_numeros.inicio; j != NULL; j = j->sig);
         j->sig = nuevo;
         nuevo->ant = j;
+        nuevo->sig= NULL;
     }
+
+    lista_numeros.cantidad++;
 }
 
-void llenar_carton(tlista_numeros &lista_numeros)
+tlista_numeros llenar_carton(tlista_numeros &lista_numeros)
 {
-    int cont, num;
+    int cont, num=0;
     pnodo2 i;
-    for (cont = 0; cont -1 != MAX_NUM; cont++)
+    for (cont = 0; cont != MAX_NUM; cont++)
     {
-       // crear_nodo(i);
-        num = generar_numero(lista_numeros, num);
-        i->numero = num;
         agregar_numero(lista_numeros, i);
     }
+    return lista_numeros;
 }
 
 void mostrar_carton(tlista_numeros lista_numeros)
@@ -241,6 +251,16 @@ void mostrar_carton(tlista_numeros lista_numeros)
     {
         cout << "Nro: " << i->numero << endl;
     }
+}
+
+void asignar_carton(tlista_jugador&lista_jugadores, tlista_numeros lista)
+{int cont=0;
+    pnodo i;
+    for(i=lista_jugadores.inicio; i->sig!=NULL;i=i->sig)
+    {
+        llenar_carton(lista);
+        i->jugador.carton.lista_numeros=llenar_carton(lista);
+    }    
 }
 
 //Juego
@@ -284,8 +304,8 @@ int main()
             else
                 cout << "Jugadores insuficientes" << endl;
             break;
-        case 3:
-            llenar_carton(lista_numeros);
+        case 3:  cout << "Jugadores insuficientes" << endl;
+            lista_numeros=llenar_carton(lista_numeros);
             mostrar_carton(lista_numeros);
             /* if(condicion_jugadores&&condicion_cartones)
                 {

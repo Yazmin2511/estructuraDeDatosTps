@@ -7,8 +7,26 @@ using namespace std;
 const int MAX = 30;
 
 //Define la cantidad de numeros por carton
-const int MAX_NUM=15;
+const int MAX_NUM=5;
 
+// ****************************************
+// Definicion de estructuras para Carton
+typedef struct tnodo2 *pnodo2;
+
+typedef struct tnodo2{
+                int numero;
+                pnodo2 sig;
+                pnodo2 ant;
+};
+typedef struct tlista_numeros{
+                pnodo2 inicio;
+                int cantidad;
+};
+
+typedef struct t_carton {
+                tlista_numeros lista_numeros;
+};
+// ****************************************
 // Definicion de estructuras para Jugador
 typedef char tcad[30];
 typedef struct t_jugador{
@@ -17,6 +35,7 @@ typedef struct t_jugador{
                 long dni;
                 int bingos_ganados;
                 int puntaje;
+                t_carton carton;
 };
 typedef struct tnodo *pnodo;
 typedef struct tnodo{
@@ -27,20 +46,6 @@ typedef struct tlista_jugador{
                 pnodo inicio;
                 int cantidad;
 };
-
-// Definicion de estructuras para Carton
-typedef struct tnodo2 *pnodo2;
-
-typedef struct tnodo2{
-                int numero;
-                pnodo2 sig;
-                pnodo2 ant;
-};
-typedef struct tlista_carton{
-                pnodo2 inicio;
-                int cantidad;
-};
-
 
 // Jugadores
 //Metodos encargados de gestionar el menu de jugador
@@ -129,6 +134,7 @@ void menu_jugadores(tlista_jugador& lista_jugador)
     cout<<"_______ADMINISTRAR JUGADOR_______"<<endl;
     cout<<"1. Agregar jugadores"<<endl;
     cout<<"2. Listar jugadores"<<endl;
+    cout<<"3. Volver al menu anterior"<<endl;
     cout<<"Seleccione la opcion deseada: "<<endl;
     cin>>opcion;
 
@@ -138,7 +144,8 @@ void menu_jugadores(tlista_jugador& lista_jugador)
         break;
     case 2: mostrar_jugadores(lista_jugador);
         break;
-    
+    case 3: cout<<"Volviendo..."<<endl;
+        break;
     default: cout<<"Opcion invalida ..."<<endl;
         break;
     }
@@ -146,41 +153,77 @@ void menu_jugadores(tlista_jugador& lista_jugador)
 
 // Cartones
 
-void iniciar_lista_cartones(tlista_carton&lista_carton)
+void iniciar_lista_numeros(tlista_numeros&lista_numeros) // Va cuando se le asigna un carton a cada jugador
 {
-    lista_carton.inicio=NULL;
-    lista_carton.cantidad=0;
+    lista_numeros.inicio=NULL;
+    lista_numeros.cantidad=0;
 }
 
-
-bool comprobacion(tlista_carton lista, int num){
+bool comprobacion(tlista_numeros lista, int num){
     pnodo2 j;
  
     bool existe=false;
-    for(j=lista.inicio; existe==true || j->sig==NULL ; j=j->sig ){
-        if(j->numero == num)
-            existe=true;
-    }
+    if(lista.inicio != NULL)
+    {
+        for(j=lista.inicio; existe==true || j->sig==NULL ; j=j->sig ){
+                if(j->numero == num)
+                    existe=true;
+        }
+    }  
     return existe;
 }
 
-void agregar_numeros_carton(tlista_carton&lista_carton){
-pnodo2 i=lista_carton.inicio;
-int num;
-    srand(time(NULL));
-    
-    do
-    {
-        num=1+rand()%(91-1);
-        if(comprobacion(lista_carton,num)==false)
-        {
-            
-        }
+void crear_nodo(pnodo2&nuevo)
+{   int num;
+    nuevo = new tnodo2;
+    nuevo->ant=NULL;
+    nuevo->sig=NULL;
+}
 
-    } while (i->sig!=NULL);
+int generar_numero(tlista_numeros lista ,int&num){
+    srand(time(NULL));
+    //srand((unsigned)time(0));
+    do{
+        num=1+rand()%(91-1);
+    }while(comprobacion(lista,num) == true);
     
-    
-    
+    return num;
+}
+
+void agregar_numero(tlista_numeros&lista_numeros, pnodo2 nuevo){
+pnodo2 j;
+int num , cont = 0;
+
+    if(lista_numeros.inicio==NULL)
+        lista_numeros.inicio = nuevo;
+    else
+    {
+       for(j=lista_numeros.inicio;j->sig==NULL; j=j->sig);
+        j->sig=nuevo;
+        nuevo->ant=j;
+    }
+
+ }
+   
+void llenar_carton(tlista_numeros&lista_numeros)
+{int cont=0,num;
+ pnodo2 i;
+    while (cont!=MAX_NUM ){
+            crear_nodo(i);
+            num=generar_numero(lista_numeros,num);
+            i->numero=num;
+            agregar_numero(lista_numeros,i);
+            cont++;        
+    }    
+}
+
+void mostrar_carton(tlista_numeros lista_numeros)
+{
+pnodo2 i;
+    for(i=lista_numeros.inicio;i!=NULL;i=i->sig)
+    {
+        cout<<"Nro: "<<i->numero<<endl;
+    }
 }
 
 //Juego
@@ -207,6 +250,7 @@ int main()
 {   //Variables
     int opcion;
     tlista_jugador lista_jugador;
+    tlista_numeros lista_numeros;
     iniciar_lista(lista_jugador);
     
     bool condicion_jugadores = lista_jugador.cantidad>1;
@@ -226,12 +270,15 @@ int main()
                 else
                     cout<<"Jugadores insuficientes"<<endl;
             break;
-        case 3: if(condicion_jugadores&&condicion_cartones)
+        case 3: 
+                llenar_carton(lista_numeros);
+                mostrar_carton(lista_numeros);
+               /* if(condicion_jugadores&&condicion_cartones)
                 {
 
                 }
                 else
-                    cout<<"Jugadores insuficientes , o cartones no generados ..."<<endl;
+                    cout<<"Jugadores insuficientes , o cartones no generados ..."<<endl; */
             break;
         case 4:
             break;
